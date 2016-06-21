@@ -77,7 +77,11 @@ class ChromecastComponent extends vjsButton
     @apiSession = session
     @addClass "connected"
 
-    mediaInfo = new chrome.cast.media.MediaInfo @player_.currentSrc(), @player_.currentType()
+    src = @player_.currentSrc()
+    if (src.match(/^blob/))
+      src = @player_.getCache().src
+
+    mediaInfo = new chrome.cast.media.MediaInfo src, @player_.currentType()
 
     if @settings.metadata
       mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata()

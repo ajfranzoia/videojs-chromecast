@@ -1,4 +1,4 @@
-/*! videojs-chromecast - v1.1.1 - 2016-01-27
+/*! videojs-chromecast - v1.1.2 - 2016-06-21
 * https://github.com/kim-company/videojs-chromecast
 * Copyright (c) 2016 KIM Keep In Mind GmbH, srl; Licensed MIT */
 
@@ -114,11 +114,15 @@
     };
 
     ChromecastComponent.prototype.onSessionSuccess = function(session) {
-      var image, key, loadRequest, mediaInfo, ref, value;
+      var image, key, loadRequest, mediaInfo, ref, src, value;
       videojs.log("Session initialized: " + session.sessionId);
       this.apiSession = session;
       this.addClass("connected");
-      mediaInfo = new chrome.cast.media.MediaInfo(this.player_.currentSrc(), this.player_.currentType());
+      src = this.player_.currentSrc();
+      if (src.match(/^blob/)) {
+        src = this.player_.getCache().src;
+      }
+      mediaInfo = new chrome.cast.media.MediaInfo(src, this.player_.currentType());
       if (this.settings.metadata) {
         mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
         ref = this.settings.metadata;
